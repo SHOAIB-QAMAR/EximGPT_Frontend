@@ -1,0 +1,344 @@
+@import "tailwindcss";
+
+/* Font Imports */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+:root {
+    /* --- EximGPT (Zipaworld Theme) Design System --- */
+
+    /* Brand Colors */
+    --brand-primary: #C8202F;
+    /* Zipaworld Red */
+    --brand-highlight: #FA5A5A;
+    /* Lighter Red for accents */
+    --brand-success: #28A745;
+    /* Success Green */
+    --brand-dark: #0F172A;
+    /* Deep Navy/Slate for contrast */
+
+    /* Primary Mappings (Backwards Compatibility) */
+    --primary-blue: var(--brand-primary);
+    /* Mapping Blue var to Red for immediate theme switch */
+    --primary-dark: #9B1C25;
+    --primary-light: #FF8A8A;
+
+    /* Accent Mappings */
+    --accent-orange: var(--brand-highlight);
+    --accent-dark: #C8202F;
+    --accent-light: #FFB3B3;
+
+    /* Status Colors */
+    --success-green: var(--brand-success);
+    --warning-yellow: #F59E0B;
+    --error-red: #D32F2F;
+
+    /* Backgrounds */
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F8F9FA;
+    /* Light Gray */
+    --bg-tertiary: #F1F3F5;
+    --bg-card: #FFFFFF;
+    --bg-panel: #FFF5F5;
+    /* Very subtle warm tint for panel */
+    --bg-sidebar: #FFFFFF;
+    /* Sidebar Light */
+
+    /* Text Colors */
+    --text-primary: #212529;
+    /* Dark Gray usually sturdier than pure black */
+    --text-secondary: #6C757D;
+    --text-tertiary: #ADB5BD;
+    --text-on-primary: #FFFFFF;
+
+    /* Borders */
+    --border-color: #DEE2E6;
+    --border-light: #F8F9FA;
+    --border-accent: #FFD9D9;
+    /* Red tint border */
+
+    /* Typography */
+    --font-display: 'Inter', sans-serif;
+    /* Switched to Inter as primary display based on analysis */
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(200, 32, 47, 0.05);
+    /* Red tinted shadow */
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(200, 32, 47, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(200, 32, 47, 0.05);
+}
+
+.dark {
+    /* Visual Studio Code Dark Theme */
+
+    /* Brand Colors - Keep red accent but adjust for VS Code style */
+    --brand-primary: #EF4444;
+    --brand-highlight: #F87171;
+    --brand-success: #4EC9B0;
+    /* VS Code cyan-green for success */
+    --brand-dark: #1E1E1E;
+
+    /* Primary Mappings */
+    --primary-blue: #569CD6;
+    /* VS Code blue */
+    --primary-dark: #264F78;
+    --primary-light: #9CDCFE;
+    /* VS Code light blue */
+
+    /* VS Code Backgrounds */
+    --bg-primary: #1E1E1E;
+    /* VS Code editor background */
+    --bg-secondary: #252526;
+    /* VS Code sidebar background */
+    --bg-tertiary: #2D2D2D;
+    /* VS Code hover/selection */
+    --bg-card: #252526;
+    /* Cards match sidebar */
+    --bg-panel: #1E1E1E;
+    /* Panel background */
+    --bg-sidebar: #252526;
+    /* VS Code activity bar */
+    --bg-hover: #2A2D2E;
+    /* VS Code list hover */
+    --bg-active: #37373D;
+    /* VS Code active selection */
+
+    /* VS Code Text Colors */
+    --text-primary: #D4D4D4;
+    /* VS Code default text */
+    --text-secondary: #9D9D9D;
+    /* Slightly muted */
+    --text-tertiary: #6A9955;
+    /* VS Code comment green - or use #808080 */
+    --text-on-primary: #FFFFFF;
+
+    /* VS Code Borders */
+    --border-color: #3C3C3C;
+    /* VS Code border */
+    --border-light: #2D2D2D;
+    --border-accent: #007ACC;
+    /* VS Code blue accent border */
+
+    /* VS Code Accent Colors */
+    --accent-blue: #007ACC;
+    /* VS Code signature blue */
+    --accent-purple: #C586C0;
+    /* VS Code pink/purple */
+    --accent-cyan: #4EC9B0;
+    /* VS Code teal */
+    --accent-yellow: #DCDCAA;
+    /* VS Code function yellow */
+    --accent-orange: #CE9178;
+    /* VS Code string orange */
+
+    /* Shadows - Subtle for VS Code flat design */
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.6);
+    --shadow-glow: 0 0 15px rgba(0, 122, 204, 0.2);
+    /* VS Code blue glow */
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Orientation-based Visibility Logic (Strict Tablet/Desktop vs Mobile) */
+
+/* 
+   DEFAULT (Mobile/Landscape Phone/Portrait Tablet): 
+   Show Mobile UI (Pills/Switcher), Hide Desktop UI (Cards/Tabs)
+*/
+.mobile-ui-visible {
+    display: flex !important;
+}
+
+.desktop-ui-visible {
+    display: none !important;
+}
+
+/* 
+   STRICT TABLET/DESKTOP CONDITION:
+   Device must be:
+   1. Wide enough (>= 768px)
+   2. Tall enough (>= 600px)
+   
+   If BOTH are true, switch to Desktop UI.
+*/
+@media (min-width: 768px) and (min-height: 600px) {
+    .mobile-ui-visible {
+        display: none !important;
+    }
+
+    .desktop-ui-visible {
+        display: flex !important;
+    }
+}
+
+/* Mobile Viewport Keyboard Handling */
+@supports (height: 100dvh) {
+    .app {
+        height: 100dvh;
+    }
+}
+
+/* Ensure proper mobile viewport behavior */
+@media (max-width: 768px) {
+
+    html,
+    body {
+        /* Prevent scroll bounce */
+        overscroll-behavior: none;
+    }
+
+    /* Use dynamic viewport height for mobile */
+    .app {
+        height: 100dvh;
+        height: -webkit-fill-available;
+    }
+
+    /* Chat area should fill available space */
+    .chat-area {
+        min-height: 0;
+        flex: 1;
+    }
+
+    /* Welcome content centering */
+    .welcome-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        flex: 1;
+    }
+}
+
+/* Attentive Status Color */
+:root {
+    --status-attentive: #F59E0B;
+    /* Amber-500 */
+}
+
+/* Typography Utilities */
+.font-display {
+    font-family: var(--font-display);
+}
+
+.font-mono-data {
+    font-family: var(--font-mono);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(128, 128, 128, 0);
+    /* Low opacity by default */
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+*:hover> ::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(128, 128, 128, .4);
+    /* Full opacity on hover/interaction */
+}
+
+/* Hide scrollbar utility */
+.scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+    display: none;
+}
+
+/* Logistics Card Styles */
+.logistics-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    /* 12px */
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2ms ease-in-out;
+}
+
+.logistics-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-light);
+}
+
+/* Tooltip Fixes */
+.tooltip {
+    z-index: 10000 !important;
+}
+
+.tooltip-inner {
+    background-color: var(--text-primary) !important;
+    color: var(--bg-primary) !important;
+    font-family: var(--font-body);
+}
+
+/* Sidebar Chat Tooltip Specifics */
+/* Sidebar Chat Tooltip Specifics */
+.chat-tooltip .tooltip-inner {
+    background-color: white !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    font-weight: 500;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+    border-radius: 0.5rem;
+}
+
+/* Logistics Loader Animations */
+@keyframes spin-slow {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulse-ring {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.4;
+    }
+
+    100% {
+        transform: scale(1.8);
+        opacity: 0;
+    }
+}
+
+.animate-spin-slow {
+    animation: spin-slow 3s linear infinite;
+}
+
+.animate-pulse-ring {
+    animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+
+
+.dark .chat-tooltip .tooltip-inner {
+    background-color: var(--bg-tertiary) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-color);
+}
+
+.chat-tooltip .tooltip-arrow::before {
+    border-right-color: var(--border-color) !important;
+}
