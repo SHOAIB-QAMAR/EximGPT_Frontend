@@ -268,8 +268,9 @@ class SharedWebSocketService {
 
     /**
      * Create the single WebSocket connection (leader only)
+     * Includes retry logic for Render free tier cold starts
      */
-    _createWebSocket() {
+    _createWebSocket(retryCount = 0) {
         if (!this.isLeader) return;
 
         if (this.socket &&
@@ -278,9 +279,12 @@ class SharedWebSocketService {
             return;
         }
 
+        const MAX_RETRIES = 5;
+        const RETRY_DELAYS = [1000, 2000, 4000, 8000, 16000]; // Exponential backoff
+
         // Single endpoint for all threads
         const wsUrl = `${API_CONFIG.WS_BASE_URL}${API_CONFIG.endpoints.CHAT_WS}`;
-        console.log(`[SharedWS] Creating single multiplexed WebSocket: ${wsUrl}`);
+        console.log(`[SharedWS] Creating single multiplexed WebSocket: ${wsUrl} (attempt ${retryCount + 1}/${MAX_RETRIES + 1})`);
 
         this.socket = new WebSocket(wsUrl);
 
@@ -321,6 +325,19 @@ class SharedWebSocketService {
         this.socket.onclose = () => {
             console.log('[SharedWS] WebSocket closed');
             this.socket = null;
+
+            // Retry if we still have active threads and haven't exceeded retries
+            if (this.activeThreads.size > 0 && retryCount < MAX_RETRIES) {
+                const delay = RETRY_DELAYS[retryCount] || RETRY_DELAYS[RETRY_DELAYS.length - 1];
+                console.log(`[SharedWS] Retrying WebSocket connection in ${delay}ms...`);
+                setTimeout(() => {
+                    if (this.isLeader && this.activeThreads.size > 0) {
+                        this._createWebSocket(retryCount + 1);
+                    }
+                }, delay);
+            } else if (retryCount >= MAX_RETRIES) {
+                console.error('[SharedWS] Max retries exceeded. WebSocket connection failed.');
+            }
         };
     }
 
