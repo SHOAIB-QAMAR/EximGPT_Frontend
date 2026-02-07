@@ -193,12 +193,18 @@ body {
     body {
         /* Prevent scroll bounce */
         overscroll-behavior: none;
+        /* Prevent body from scrolling when keyboard opens */
+        position: fixed;
+        width: 100%;
+        height: 100%;
     }
 
     /* Use dynamic viewport height for mobile */
     .app {
         height: 100dvh;
         height: -webkit-fill-available;
+        /* Use CSS custom property set by JS when keyboard is visible */
+        height: var(--visual-viewport-height, 100dvh);
     }
 
     /* Chat area should fill available space */
@@ -214,6 +220,17 @@ body {
         justify-content: center;
         align-items: center;
         flex: 1;
+    }
+
+    /* When keyboard is visible, ensure input stays visible */
+    .keyboard-visible .chat-area {
+        /* Let flex handle the space allocation */
+        overflow: hidden;
+    }
+
+    .keyboard-visible .input-area {
+        /* Ensure input stays at bottom of visual viewport */
+        flex-shrink: 0;
     }
 }
 

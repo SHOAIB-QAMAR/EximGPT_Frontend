@@ -17,6 +17,7 @@ import ContextPanel from '../components/ContextPanel';
 import { useThreads } from '../hooks/useThreads';
 import { useChatSessions } from '../hooks/useChatSessions';
 import { useWebSocket } from '../hooks/useWebSocket';
+import useKeyboardVisibility from '../hooks/useKeyboardVisibility';
 
 // Services
 import ChatService from '../services/chat.service';
@@ -86,6 +87,8 @@ const Layout = () => {
         handleLoadChat
     } = useChatSessions(threads, closeMobileSidebar);
 
+    // --- Keyboard Visibility Hook (Mobile) ---
+    const { keyboardVisible, viewportHeight } = useKeyboardVisibility();
 
     // --- Scroll Logic (UI Concern, kept in Layout) ---
     const chatContainerRef = useRef(null);
@@ -388,7 +391,13 @@ const Layout = () => {
 
 
     return (
-        <div className="app flex w-screen h-screen overflow-hidden bg-[var(--bg-primary)] text-[var(--text-primary)] transition-colors duration-800 font-sans relative">
+        <div
+            className={`app flex w-screen overflow-hidden bg-[var(--bg-primary)] text-[var(--text-primary)] transition-colors duration-800 font-sans relative ${keyboardVisible ? 'keyboard-visible' : ''}`}
+            style={{
+                height: viewportHeight ? `${viewportHeight}px` : '100dvh',
+                minHeight: viewportHeight ? `${viewportHeight}px` : '100dvh'
+            }}
+        >
             {/* Top-Right Background Gradient Blob (Darker) */}
             <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[radial-gradient(circle_at_center,var(--brand-primary),transparent_70%)] opacity-[0.15] blur-3xl pointer-events-none z-0"></div>
             <Sidebar
@@ -406,7 +415,7 @@ const Layout = () => {
                 showFAQ={showFAQ}
             />
 
-            <div className="content flex-1 flex flex-col h-screen overflow-hidden relative transition-colors duration-800">
+            <div className="content flex-1 flex flex-col h-full overflow-hidden relative transition-colors duration-800">
                 <Header
                     toggleMobileSidebar={toggleMobileSidebar}
                     selectedLang={selectedLang}

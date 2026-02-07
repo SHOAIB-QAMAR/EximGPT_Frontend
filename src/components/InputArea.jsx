@@ -1,10 +1,11 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useEffect } from 'react';
 import useSpeechToText from '../hooks/useSpeechToText';
 import { FaPaperclip, FaMicrophone, FaStop, FaPaperPlane, FaXmark } from "react-icons/fa6";
 
 const InputArea = ({ inputValue, setInputValue, onSend, mode, selectedFile, setSelectedFile }) => {
     const textareaRef = useRef(null);
     const fileInputRef = useRef(null);
+    const inputContainerRef = useRef(null);
 
     const { isListening, transcript, interimTranscript, startListening, stopListening, resetTranscript } = useSpeechToText({
         lang: 'en-US'
@@ -93,8 +94,21 @@ const InputArea = ({ inputValue, setInputValue, onSend, mode, selectedFile, setS
         }
     };
 
+    // Scroll input into view when focused on mobile (helps with keyboard visibility)
+    const handleFocus = () => {
+        // Small delay to allow keyboard to open
+        setTimeout(() => {
+            if (inputContainerRef.current && window.innerWidth < 768) {
+                inputContainerRef.current.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'end'
+                });
+            }
+        }, 300);
+    };
+
     return (
-        <div className={`${isStandalone ? 'input-area shrink-0 px-4 py-4 bg-[var(--bg-primary)] border-t border-[var(--border-color)] transition-colors duration-800' : 'w-full'}`}>
+        <div ref={inputContainerRef} className={`${isStandalone ? 'input-area shrink-0 px-4 py-4 bg-[var(--bg-primary)] border-t border-[var(--border-color)] transition-colors duration-800' : 'w-full'}`}>
             <div className={`${isStandalone ? 'container max-w-[900px] mx-auto relative' : 'relative'}`}>
 
                 {/* Image Preview */}
@@ -155,6 +169,7 @@ const InputArea = ({ inputValue, setInputValue, onSend, mode, selectedFile, setS
                                 value={isListening ? inputValue + (interimTranscript ? " " + interimTranscript : "") : inputValue}
                                 onChange={handleInput}
                                 onKeyDown={handleKeyDown}
+                                onFocus={handleFocus}
                                 rows={1}
                                 style={{ minHeight: '44px' }}
                             />
