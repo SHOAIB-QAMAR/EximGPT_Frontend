@@ -209,10 +209,11 @@ const Sidebar = ({ collapsed, toggleSidebar, isOpenMobile, closeMobileSidebar, o
     return (
         <>
             <div
-                className={`sidebar h-screen flex flex-col justify-between overflow-hidden border-r border-[var(--border-color)] bg-[var(--bg-sidebar)] text-[var(--text-primary)] transition-all duration-300 ease-in-out fixed lg:relative z-50
+                className={`sidebar h-full max-h-[100dvh] flex flex-col justify-between overflow-hidden border-r border-[var(--border-color)] bg-[var(--bg-sidebar)] text-[var(--text-primary)] transition-all duration-300 ease-in-out fixed lg:relative z-50
           ${isExpanded ? 'w-68' : 'w-16'} 
           ${isOpenMobile ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
+                style={{ height: 'var(--visual-viewport-height, 100dvh)' }}
                 id="sidebar"
             >
                 {/* Top Icons */}
@@ -378,8 +379,8 @@ const Sidebar = ({ collapsed, toggleSidebar, isOpenMobile, closeMobileSidebar, o
                     )}
                 </div>
 
-                {/* Footer */}
-                <div className="sidebar-footer flex flex-col p-1.5 ">
+                {/* Footer - shrink-0 ensures it never gets compressed */}
+                <div className="sidebar-footer shrink-0 flex flex-col p-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))]">
                     <Tooltip
                         content={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
                         disabled={isExpanded}
